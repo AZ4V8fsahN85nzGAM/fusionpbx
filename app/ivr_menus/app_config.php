@@ -136,6 +136,8 @@
 		$y++;
 		$apps[$x]['permissions'][$y]['name'] = "ivr_menu_audio_edit";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = "ivr_menu_custom_destinations";
 
 	//default settings
 		$y=0;

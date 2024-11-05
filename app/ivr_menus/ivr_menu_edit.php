@@ -283,7 +283,7 @@
 					$array['ivr_menus'][0]["ivr_menu_tts_voice"] = $ivr_menu_tts_voice;
 					$array['ivr_menus'][0]["ivr_menu_confirm_attempts"] = $ivr_menu_confirm_attempts;
 					$array['ivr_menus'][0]["ivr_menu_timeout"] = $ivr_menu_timeout;
-					if ($destination->valid($ivr_menu_exit_app.":".$ivr_menu_exit_data)) {
+					if (permission_exists('ivr_menu_custom_destinations') || $destination->valid($ivr_menu_exit_app.":".$ivr_menu_exit_data)) {
 						$array['ivr_menus'][0]["ivr_menu_exit_app"] = $ivr_menu_exit_app;
 						$array['ivr_menus'][0]["ivr_menu_exit_data"] = $ivr_menu_exit_data;
 					}
