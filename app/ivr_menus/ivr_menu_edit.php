@@ -291,7 +291,7 @@
 					$array['ivr_menus'][0]["ivr_menu_tts_voice"] = $ivr_menu_tts_voice;
 					$array['ivr_menus'][0]["ivr_menu_confirm_attempts"] = $ivr_menu_confirm_attempts;
 					$array['ivr_menus'][0]["ivr_menu_timeout"] = $ivr_menu_timeout;
-					if (permission_exists('ivr_menu_custom_destinations') || $destination->valid($ivr_menu_exit_app.":".$ivr_menu_exit_data)) {
+					if ($destination->valid($ivr_menu_exit_app.":".$ivr_menu_exit_data)) {
 						$array['ivr_menus'][0]["ivr_menu_exit_app"] = $ivr_menu_exit_app;
 						$array['ivr_menus'][0]["ivr_menu_exit_data"] = $ivr_menu_exit_data;
 					}
@@ -335,7 +335,7 @@
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_uuid"] = $ivr_menu_option_uuid;
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_digits"] = $row["ivr_menu_option_digits"];
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_action"] = $ivr_menu_option_action;
-							if ($destination->valid($ivr_menu_option_action.":".$ivr_menu_option_param, 'ivr')) {
+							if (permission_exists('ivr_menu_custom_destinations') || $destination->valid($ivr_menu_option_action.":".$ivr_menu_option_param, 'ivr')) {
 								$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_param"] = $ivr_menu_option_param;
 							}
 							$array['ivr_menus'][0]['ivr_menu_options'][$y]["ivr_menu_option_order"] = $row["ivr_menu_option_order"];
