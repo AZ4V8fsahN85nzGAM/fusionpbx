@@ -17,13 +17,29 @@ function xml:build()
 end
 
 function xml.sanitize(s)
-    return (string.gsub(s, "[\"><'$]", {
+    --create the database object
+        local Database = require "resources.functions.database";
+        dbh = Database.new('system');
+
+    --create the settings object
+        local Settings = require "resources.functions.lazy_settings";
+        local settings = Settings.new(dbh, domain_name, domain_uuid);
+
+    --get the allow_dangerous_commands variable
+        local allow_dangerous_commands = tostring(settings:get('switch', 'allow_dangerous_commands', 'boolean')):lower() == 'true' or false;
+
+    local result = string.gsub(s, "[\"><'$]", {
         ["<"] = "&lt;",
         [">"] = "&gt;",
         ['"'] = "&quot;",
-        ["'"] = "&apos;",
-        ["$"] = ""
-    }))
+        ["'"] = "&apos;"
+    })
+
+    if (not allow_dangerous_commands) then
+        result = string.gsub(result, '%$', '');
+    end
+
+    return result;
 end
 
 return xml;
