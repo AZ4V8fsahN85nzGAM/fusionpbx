@@ -28,7 +28,7 @@ function xml.sanitize(s)
     --get the allow_dangerous_commands variable
         local allow_dangerous_commands = tostring(settings:get('switch', 'allow_dangerous_commands', 'boolean')):lower() == 'true' or false;
 
-    local result = string.gsub(s, "[\"><'$]", {
+    local result = string.gsub(s, "[\"><']", {
         ["<"] = "&lt;",
         [">"] = "&gt;",
         ['"'] = "&quot;",
