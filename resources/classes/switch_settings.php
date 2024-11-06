@@ -87,6 +87,13 @@ if (!class_exists('switch_settings')) {
 
 			//create the default settings array
 				$x=0;
+                                $array[$x]['default_setting_category'] = 'switch';
+                                $array[$x]['default_setting_subcategory'] = 'allow_dangerous_commands';
+                                $array[$x]['default_setting_name'] = 'boolean';
+                                $array[$x]['default_setting_value'] = 'false';
+				$array[$x]['default_setting_enabled'] = 'false';
+                                $array[$x]['default_setting_description'] = 'CAUTION: ENABLING THIS OPTION REDUCES SECURITY!!! Permits the use of $ in most strings, which are then expanded by FreeSWITCH.';
+				$x++;
 				$array[$x]['default_setting_category'] = 'switch';
 				$array[$x]['default_setting_subcategory'] = 'bin';
 				$array[$x]['default_setting_name'] = 'dir';
