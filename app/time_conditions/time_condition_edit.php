@@ -425,7 +425,7 @@
 							$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
 							$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
 							$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'action';
-							if ($destination->valid($dialplan_action_app.':'.$dialplan_action_data)) {
+							if (permission_exists('time_condition_custom_destinations') || $destination->valid($dialplan_action_app.':'.$dialplan_action_data)) {
 								$array['dialplan_details'][$x]['dialplan_detail_type'] = $dialplan_action_app;
 								$array['dialplan_details'][$x]['dialplan_detail_data'] = $dialplan_action_data;
 							}
@@ -467,7 +467,7 @@
 				$array['dialplan_details'][$x]['dialplan_uuid'] = $dialplan_uuid;
 				$array['dialplan_details'][$x]['dialplan_detail_uuid'] = uuid();
 				$array['dialplan_details'][$x]['dialplan_detail_tag'] = 'action';
-				if ($destination->valid($dialplan_anti_action_app.':'.$dialplan_anti_action_data)) {
+				if (permission_exists('time_condition_custom_destinations') || $destination->valid($dialplan_anti_action_app.':'.$dialplan_anti_action_data)) {
 					$array['dialplan_details'][$x]['dialplan_detail_type'] = $dialplan_anti_action_app;
 					$array['dialplan_details'][$x]['dialplan_detail_data'] = $dialplan_anti_action_data;
 				}

@@ -78,6 +78,8 @@
 		$apps[$x]['permissions'][$y]['name'] = "time_condition_destinations";
 		$apps[$x]['permissions'][$y]['groups'][] = "admin";
 		$apps[$x]['permissions'][$y]['groups'][] = "superadmin";
+                $y++;
+                $apps[$x]['permissions'][$y]['name'] = "time_condition_custom_destinations";
 
 	//default settings
 		$y=0;
