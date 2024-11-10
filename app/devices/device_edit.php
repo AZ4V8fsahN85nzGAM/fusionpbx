@@ -1000,6 +1000,51 @@
 						}
 						$view->assign($key, $val);
 					}
+
+					//get the first line of the device
+					if (is_uuid($device_uuid)) {
+						$sql = "select * from v_device_lines ";
+						$sql .= "inner join v_devices on v_devices.device_uuid = v_device_lines.device_uuid ";
+						$sql .= "where device_address = :device_address ";
+						$sql .= "and (enabled = 'true' or enabled is null or enabled = '') ";
+						$sql .= "and line_number = '1' ";
+						$sql .= "limit 1 ";
+						$parameters['device_address'] = $device_address;
+						$line_one = $database->select($sql, $parameters, 'row');
+						unset($sql, $parameters);
+						
+						if (is_array($line_one)) {
+							//set the variables
+							$register_expires = $line_one['register_expires'];
+							$sip_transport = strtolower($line_one['sip_transport']);
+							$sip_port = $line_one['sip_port'];
+							
+							//set defaults
+							if (empty($register_expires)) { $register_expires = "120"; }
+							if (empty($sip_transport)) { $sip_transport = "tcp"; }
+							if (!isset($sip_port)) { $sip_port = "5060"; }
+							
+							//convert seconds to minutes for grandstream
+							if ($device_vendor == 'grandstream') {
+								$register_expires = round($register_expires / 60);
+							}
+							
+							//assign the variables for line one - short name
+							$view->assign("server_address", $line_one["server_address"]);
+							$view->assign("outbound_proxy", $line_one["outbound_proxy_primary"]);
+							$view->assign("outbound_proxy_primary", $line_one["outbound_proxy_primary"]);
+							$view->assign("outbound_proxy_secondary", $line_one["outbound_proxy_secondary"]);
+							$view->assign("display_name", $line_one["display_name"]);
+							$view->assign("auth_id", $line_one["auth_id"]);
+							$view->assign("user_id", $line_one["user_id"]);
+							$view->assign("sip_transport", $sip_transport);
+							$view->assign("sip_port", $sip_port);
+							$view->assign("register_expires", $register_expires);
+							$view->assign("shared_line", $line_one["shared_line"]);
+						}
+						
+						unset($line_one);
+					}
 				}
 				unset($provision);
 				
