@@ -770,6 +770,57 @@
 		echo "</script>";
 	}
 
+//get template directory
+	$template_dir = $settings->get('provision', 'template_dir', '');
+
+//set the default template directory
+	if (PHP_OS == "Linux") {
+		//set the default template dir
+			if (empty($template_dir)) {
+				if (file_exists('/usr/share/fusionpbx/templates/provision')) {
+					$template_dir = '/usr/share/fusionpbx/templates/provision';
+				}
+				elseif (file_exists('/etc/fusionpbx/resources/templates/provision')) {
+					$template_dir = '/etc/fusionpbx/resources/templates/provision';
+				}
+				else {
+					$template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+				}
+			}
+	}
+	elseif (PHP_OS == "FreeBSD") {
+		//if the FreeBSD port is installed use the following paths by default.
+			if (empty($template_dir)) {
+				if (file_exists('/usr/local/share/fusionpbx/templates/provision')) {
+					$template_dir = '/usr/local/share/fusionpbx/templates/provision';
+				}
+				elseif (file_exists('/usr/local/etc/fusionpbx/resources/templates/provision')) {
+					$template_dir = '/usr/local/etc/fusionpbx/resources/templates/provision';
+				}
+				else {
+					$template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+				}
+			}
+	}
+	else if (PHP_OS == "NetBSD") {
+		//set the default template_dir
+			if (empty($template_dir)) {
+				$template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+			}
+	}
+	else if (PHP_OS == "OpenBSD") {
+		//set the default template_dir
+			if (empty($template_dir)) {
+				$template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+			}
+	}
+	else {
+		//set the default template_dir
+			if (empty($template_dir)) {
+				$template_dir = $_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/resources/templates/provision';
+			}
+	}
+
 //determine whether to build the qrcode
 	if ($device_template == "grandstream/wave") {
 		$qr_code_enabled = true;
@@ -784,6 +835,9 @@
 		$qr_code_enabled = true;
 	}
 	else if ($device_template == "groundwire/default") {
+		$qr_code_enabled = true;
+	}
+	else if (is_file($template_dir.'/'.$device_template.'/qr_template.txt')) {
 		$qr_code_enabled = true;
 	}
 	else {
@@ -916,7 +970,41 @@
 					unset($template);
 				}
 			}
-
+			
+			//build content for custom provisioning if qr_template.txt exists
+			else if (is_file($template_dir.'/'.$device_template.'/qr_template.txt')) {
+				$view = new template();
+				$provision = $settings->get('provision', null, []);
+				if (is_array($provision)) {
+					$view->engine = $provision['template_engine'] ?? 'smarty';
+					$view->template_dir = $template_dir."/".$device_template."/";
+					$view->cache_dir = sys_get_temp_dir();
+					$view->init();
+					
+					//add the http auth password to the array
+					if (isset($provision["http_auth_password"]) && is_array($provision["http_auth_password"])) {
+						$provision["http_auth_password"] = $provision["http_auth_password"][0];
+					}
+					
+					//add domain_uuid and device_address to the array
+					$provision["domain_uuid"] = $domain_uuid;
+					$provision["device_address"] = $device_address;
+					
+					//replace the dynamic provision variables that are defined in default, domain, and device settings
+					foreach($provision as $key=>$val) {
+						if (!empty($val) && is_string($val) && strpos($val, '{$domain_name}') !== false) {
+							$val = str_replace('{$domain_name}', $domain_name, $val);
+						}
+						if (!empty($val) && is_string($val) && strpos($val, '${domain_name}') !== false) {
+							$val = str_replace('${domain_name}', $domain_name, $val);
+						}
+						$view->assign($key, $val);
+					}
+				}
+				unset($provision);
+				
+				$content = trim($view->render('qr_template.txt'), "\r\n");
+			}
 		}
 
 		//build content for linphone
@@ -1012,6 +1100,8 @@
 
 
 	}
+
+	unset($template_dir);
 
 //show the content
 	echo "<form name='frm' id='frm' method='post'>\n";
