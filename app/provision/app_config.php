@@ -160,6 +160,14 @@
 		$apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
 		$apps[$x]['default_settings'][$y]['default_setting_description'] = "";
 		$y++;
+                $apps[$x]['default_settings'][$y]['default_setting_uuid'] = "6ad5d596-56fb-458f-85c0-4deefc91e127";
+                $apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
+                $apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "line_label_update_device_keys";
+                $apps[$x]['default_settings'][$y]['default_setting_name'] = "boolean";
+                $apps[$x]['default_settings'][$y]['default_setting_value'] = "true";
+                $apps[$x]['default_settings'][$y]['default_setting_enabled'] = "true";
+                $apps[$x]['default_settings'][$y]['default_setting_description'] = "When editing extensions, automatically update all extensions' device key labels with the edited extension's caller ID name.";
+                $y++;
 		$apps[$x]['default_settings'][$y]['default_setting_uuid'] = "97402737-ba86-4d4e-8847-5497d07ef6b5";
 		$apps[$x]['default_settings'][$y]['default_setting_category'] = "provision";
 		$apps[$x]['default_settings'][$y]['default_setting_subcategory'] = "line_display_name";

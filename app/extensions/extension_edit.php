@@ -767,7 +767,7 @@
 					}
 
 				//update device key label
-					if (!empty($effective_caller_id_name)) {
+					if ($_SESSION['provision']['line_label_update_device_keys']['boolean'] != 'false' && !empty($effective_caller_id_name)) {
 						$sql = "update v_device_keys set ";
 						$sql .= "device_key_label = :device_key_label ";
 						$sql .= "where domain_uuid = :domain_uuid ";
