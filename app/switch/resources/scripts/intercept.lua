@@ -55,7 +55,7 @@
 	end
 
 --get the hostname
-	local hostname = trim(api:execute("hostname", ""));
+	local hostname = trim(api:execute("switchname", ""));
 
 -- redirect call to another box
 	local function make_proxy_call(destination, call_hostname)
